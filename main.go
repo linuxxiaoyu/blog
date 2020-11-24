@@ -7,7 +7,10 @@ import (
 
 func main() {
 	setting.Init()
+	if setting.IsReleaseMode() {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	r := gin.Default()
-	r.Run(":8080")
+	r.Run(setting.Port())
 }

@@ -18,5 +18,6 @@ func Init() {
 		log.Fatalf("Fail to parse 'conf/server.ini': %v", err)
 	}
 
+	initServer()
 	initDB()
 }
