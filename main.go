@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 )
@@ -12,5 +14,9 @@ func main() {
 	}
 
 	r := gin.Default()
-	r.Run(setting.Port())
+	r.GET("/", func(c *gin.Context) {
+		// time.Sleep(10 * time.Second)
+		c.String(http.StatusOK, "ok")
+	})
+	graceful(r)
 }
