@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/linuxxiaoyu/blog/pkg/setting"
+)
 
 func main() {
-	fmt.Println("Hello World!")
+	setting.Init()
 }
