@@ -4,6 +4,7 @@ import (
 	"html"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
@@ -33,6 +34,8 @@ func Update(c *gin.Context) {
 	if content != "" {
 		article.Content = content
 	}
+
+	article.Time = time.Now().Local()
 
 	result = db.Save(&article)
 	if result.RowsAffected == 0 {
