@@ -32,5 +32,6 @@ func handle(r *gin.Engine) {
 	{
 		gComment.POST("", comment.New)
 		gComment.DELETE("/:id", comment.Delete)
+		gComment.PUT("/:id", comment.Update)
 	}
 }
