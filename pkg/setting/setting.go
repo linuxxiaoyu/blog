@@ -20,4 +20,5 @@ func Init() {
 
 	initServer()
 	initDB()
+	initJWT()
 }
