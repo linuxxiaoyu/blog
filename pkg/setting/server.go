@@ -14,7 +14,7 @@ var (
 func initServer() {
 	server, err := cfg.GetSection("server")
 	if err != nil {
-		log.Fatalf("Fail to get section 'database': %v", err)
+		log.Fatalf("Fail to get section 'server': %v", err)
 	}
 
 	runMode := server.Key("RunMode").MustString("release")
