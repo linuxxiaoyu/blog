@@ -18,5 +18,6 @@ func handle(r *gin.Engine) {
 	gArticle.Use(jwt.Auth)
 	{
 		gArticle.POST("", article.New)
+		gArticle.DELETE("/:id", article.Delete)
 	}
 }
