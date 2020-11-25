@@ -10,6 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// SignUp a user
+// POST /user
+// form: name password
 func SignUp(c *gin.Context) {
 	name := html.EscapeString(c.PostForm("name"))
 	password := c.PostForm("password")
