@@ -15,7 +15,7 @@ import (
 
 // New a comment by article_id and user_id
 // POST /comments
-// form: aid content
+// form: token aid content
 func New(c *gin.Context) {
 	aid, _ := strconv.ParseUint(c.PostForm("aid"), 10, 32)
 	uid, _ := c.Get("uid")

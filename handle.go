@@ -31,5 +31,6 @@ func handle(r *gin.Engine) {
 	gComment.Use(jwt.Auth)
 	{
 		gComment.POST("", comment.New)
+		gComment.DELETE("/:id", comment.Delete)
 	}
 }
