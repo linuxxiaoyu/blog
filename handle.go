@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/linuxxiaoyu/blog/pkg/article"
+	jwt "github.com/linuxxiaoyu/blog/pkg/middleware/auth"
 	"github.com/linuxxiaoyu/blog/pkg/user"
 )
 
@@ -10,5 +12,11 @@ func handle(r *gin.Engine) {
 	{
 		gUser.POST("", user.SignUp)
 		gUser.GET("", user.Login)
+	}
+
+	gArticle := r.Group("/articles")
+	gArticle.Use(jwt.Auth)
+	{
+		gArticle.POST("", article.New)
 	}
 }
