@@ -15,6 +15,9 @@ func handle(r *gin.Engine) {
 	}
 
 	gArticle := r.Group("/articles")
+	{
+		gArticle.GET("/:id", article.Get)
+	}
 	gArticle.Use(jwt.Auth)
 	{
 		gArticle.POST("", article.New)
