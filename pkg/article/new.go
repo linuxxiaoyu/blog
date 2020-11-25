@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// New create a article.
+// New create an article.
 // POST /article
 // form: token title content
 func New(c *gin.Context) {

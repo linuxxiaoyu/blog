@@ -19,5 +19,6 @@ func handle(r *gin.Engine) {
 	{
 		gArticle.POST("", article.New)
 		gArticle.DELETE("/:id", article.Delete)
+		gArticle.PUT("/:id", article.Update)
 	}
 }

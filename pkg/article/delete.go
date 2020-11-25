@@ -8,7 +8,7 @@ import (
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 )
 
-// Delete a article
+// Delete an article
 // DELETE /articles/:id
 // form: token
 func Delete(c *gin.Context) {
