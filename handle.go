@@ -9,5 +9,6 @@ func handle(r *gin.Engine) {
 	gUser := r.Group("/user")
 	{
 		gUser.POST("", user.SignUp)
+		gUser.GET("", user.Login)
 	}
 }
