@@ -28,6 +28,10 @@ func Get(c *gin.Context) {
 }
 
 func articleResponse(article *Article) gin.H {
+	if article == nil {
+		return gin.H{}
+	}
+
 	layout := "2006-01-02 15:04:05"
 
 	comments := []gin.H{}
