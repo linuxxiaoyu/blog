@@ -5,6 +5,7 @@ import (
 	"github.com/linuxxiaoyu/blog/pkg/article"
 	"github.com/linuxxiaoyu/blog/pkg/comment"
 	jwt "github.com/linuxxiaoyu/blog/pkg/middleware/auth"
+	"github.com/linuxxiaoyu/blog/pkg/upload"
 	"github.com/linuxxiaoyu/blog/pkg/user"
 )
 
@@ -17,7 +18,7 @@ func handle(r *gin.Engine) {
 
 	gArticle := r.Group("/articles")
 	{
-		gArticle.GET("/", article.Articles)
+		gArticle.GET("", article.Articles)
 		gArticle.GET("/:id", article.Get)
 	}
 	gArticle.Use(jwt.Auth)
@@ -33,5 +34,11 @@ func handle(r *gin.Engine) {
 		gComment.POST("", comment.New)
 		gComment.DELETE("/:id", comment.Delete)
 		gComment.PUT("/:id", comment.Update)
+	}
+
+	gUpload := r.Group("/upload")
+	gUpload.Use(jwt.Auth)
+	{
+		gUpload.POST("", upload.Upload)
 	}
 }
