@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 )
 
@@ -42,6 +43,8 @@ func Update(c *gin.Context) {
 		c.JSON(http.StatusNotImplemented, nil)
 		return
 	}
+
+	cache.Hset("articles", uint(id), article)
 
 	c.JSON(http.StatusOK, nil)
 }

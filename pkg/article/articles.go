@@ -14,7 +14,7 @@ func Articles(c *gin.Context) {
 
 	articles := []Article{}
 
-	result := db.Preload("Author").Preload("Comments.User").Find(&articles).Limit(10)
+	result := db.Preload("Author").Preload("Comments.User").Order("time desc").Find(&articles).Limit(10)
 	if result.RowsAffected == 0 {
 		c.JSON(http.StatusNotFound, nil)
 		return

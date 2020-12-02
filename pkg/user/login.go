@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/linuxxiaoyu/blog/pkg/auth"
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -45,6 +46,8 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusForbidden, nil)
 		return
 	}
+
+	cache.Sadd("tokens", token)
 
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/linuxxiaoyu/blog/pkg/auth"
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 	"github.com/linuxxiaoyu/blog/pkg/user"
 
@@ -27,6 +28,7 @@ func Auth(c *gin.Context) {
 
 	claims, err := auth.ParseToken(token)
 	if err != nil || claims.ExpiresAt < time.Now().Unix() {
+		cache.Srem("tokens", token)
 		forbidden(c)
 		return
 	}
@@ -40,6 +42,8 @@ func Auth(c *gin.Context) {
 		forbidden(c)
 		return
 	}
+
+	cache.Sadd("tokens", token)
 
 	c.Next()
 }

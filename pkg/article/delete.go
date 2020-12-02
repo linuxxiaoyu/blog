@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/linuxxiaoyu/blog/pkg/cache"
+
 	"github.com/gin-gonic/gin"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 )
@@ -21,6 +23,8 @@ func Delete(c *gin.Context) {
 		c.JSON(http.StatusForbidden, nil)
 		return
 	}
+
+	cache.Hdel("articles", uint(id))
 
 	c.JSON(http.StatusOK, nil)
 }

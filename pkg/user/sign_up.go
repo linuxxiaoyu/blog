@@ -4,6 +4,8 @@ import (
 	"html"
 	"net/http"
 
+	"github.com/linuxxiaoyu/blog/pkg/cache"
+
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 
 	"github.com/astaxie/beego/validation"
@@ -34,6 +36,7 @@ func SignUp(c *gin.Context) {
 	db := setting.DB
 	result := db.Where("name = ?", name).First(&user)
 	if result.RowsAffected > 0 {
+		cache.Hset("users", user.ID, user)
 		c.JSON(http.StatusForbidden, nil)
 		return
 	}
@@ -45,6 +48,8 @@ func SignUp(c *gin.Context) {
 		c.JSON(http.StatusNotImplemented, nil)
 		return
 	}
+
+	cache.Hset("users", user.ID, user)
 
 	c.JSON(http.StatusOK, gin.H{
 		"id": user.ID,

@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/linuxxiaoyu/blog/pkg/cache"
+
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 
 	"github.com/astaxie/beego/validation"
@@ -41,6 +43,8 @@ func New(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, nil)
 		return
 	}
+
+	cache.Hset("articles", article.ID, article)
 
 	c.JSON(http.StatusOK, gin.H{
 		"id": article.ID,
