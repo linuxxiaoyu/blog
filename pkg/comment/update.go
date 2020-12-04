@@ -1,10 +1,13 @@
 package comment
 
 import (
+	"fmt"
 	"html"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 
@@ -38,6 +41,12 @@ func Update(c *gin.Context) {
 	comment.Content = content
 	comment.Time = time.Now().Local()
 	db.Save(&comment)
+
+	cache.Hset("comments", uint(id), comment)
+	cache.Sadd(
+		fmt.Sprintf("article_comments:%d", comment.ArticleID),
+		strconv.Itoa(int(id)),
+	)
 
 	c.JSON(http.StatusOK, nil)
 }

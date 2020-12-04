@@ -1,8 +1,12 @@
 package article
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 
 	"github.com/gin-gonic/gin"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
@@ -17,14 +21,26 @@ func Get(c *gin.Context) {
 		ID: uint(id),
 	}
 
+	var ginH gin.H
+	// FIXME 获取到articles后，是否需要获取comments ？
+	articleStr, err := cache.Hget("articles", uint(id))
+	if err == nil && json.Unmarshal([]byte(articleStr), &article) == nil {
+		ginH = articleResponse(&article)
+		c.JSON(http.StatusOK, ginH)
+		return
+	}
+
 	db := setting.DB
 	result := db.Preload("Author").Preload("Comments.User").First(&article)
-	if result.RowsAffected == 0 {
+	if result.Error != nil {
 		c.JSON(http.StatusNotFound, nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, articleResponse(&article))
+	cache.Hset("articles", uint(id), article)
+
+	ginH = articleResponse(&article)
+	c.JSON(http.StatusOK, ginH)
 }
 
 func articleResponse(article *Article) gin.H {
@@ -42,6 +58,12 @@ func articleResponse(article *Article) gin.H {
 			"content":  comment.Content,
 			"time":     comment.Time.Format(layout),
 		})
+
+		cache.Hset("comments", comment.ID, comment)
+		cache.Sadd(
+			fmt.Sprintf("article_comments:%d", comment.ArticleID),
+			strconv.Itoa(int(comment.ID)),
+		)
 	}
 
 	return gin.H{

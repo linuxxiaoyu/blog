@@ -1,8 +1,11 @@
 package comment
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 
@@ -17,11 +20,18 @@ func Delete(c *gin.Context) {
 	uid, _ := c.Get("uid")
 
 	db := setting.DB
-	result := db.Where("user_id = ?", uid.(uint)).Delete(&Comment{}, uint(id))
+	comment := Comment{}
+	result := db.Where("user_id = ?", uid.(uint)).Delete(&comment, uint(id))
 	if result.RowsAffected == 0 {
 		c.JSON(http.StatusNotImplemented, nil)
 		return
 	}
+
+	cache.Hdel("comments", uint(id))
+	cache.Srem(
+		fmt.Sprintf("article_comments:%d", comment.ArticleID),
+		strconv.Itoa(int(comment.ID)),
+	)
 
 	c.JSON(http.StatusOK, nil)
 }

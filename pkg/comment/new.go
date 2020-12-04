@@ -1,10 +1,14 @@
 package comment
 
 import (
+	"encoding/json"
+	"fmt"
 	"html"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 
@@ -42,7 +46,53 @@ func New(c *gin.Context) {
 		return
 	}
 
+	cache.Hset("comments", uint(comment.ID), comment)
+	cache.Sadd(
+		fmt.Sprintf("article_comments:%d", comment.ArticleID),
+		strconv.Itoa(int(comment.ID)),
+	)
+
 	c.JSON(http.StatusOK, gin.H{
 		"id": comment.ID,
 	})
+}
+
+func GetArticleComments(aid uint) []Comment {
+	key := fmt.Sprintf("article_comments:%d", aid)
+	comments := []Comment{}
+
+	commentIDs, err := cache.Smembers(key)
+	if err != nil {
+		db := setting.DB
+		result := db.Where("article_id = ?", aid).Find(&comments)
+		if result.Error != nil {
+			for _, comment := range comments {
+				cache.Hset("comments", uint(comment.ID), comment)
+				cache.Sadd(
+					fmt.Sprintf("article_comments:%d", comment.ArticleID),
+					strconv.Itoa(int(comment.ID)),
+				)
+			}
+		}
+		return comments
+	}
+
+	for _, commentIDStr := range commentIDs {
+		commentID, err := strconv.ParseUint(commentIDStr, 10, 32)
+		if err != nil {
+			return comments
+		}
+		str, err := cache.Hget("comments", uint(commentID))
+		if err != nil {
+			return comments
+		}
+		var comment Comment
+		err = json.Unmarshal([]byte(str), &comment)
+		if err != nil {
+			return comments
+		}
+		comments = append(comments, comment)
+	}
+
+	return comments
 }
