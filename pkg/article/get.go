@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/linuxxiaoyu/blog/pkg/cache"
+	"github.com/linuxxiaoyu/blog/pkg/comment"
 
 	"github.com/gin-gonic/gin"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
@@ -25,6 +26,7 @@ func Get(c *gin.Context) {
 	// FIXME 获取到articles后，是否需要获取comments ？
 	articleStr, err := cache.Hget("articles", uint(id))
 	if err == nil && json.Unmarshal([]byte(articleStr), &article) == nil {
+		article.Comments = comment.GetArticleComments(uint(id))
 		ginH = articleResponse(&article)
 		c.JSON(http.StatusOK, ginH)
 		return

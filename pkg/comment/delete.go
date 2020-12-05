@@ -1,6 +1,7 @@
 package comment
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -27,11 +28,16 @@ func Delete(c *gin.Context) {
 		return
 	}
 
+	commentStr, err := cache.Hget("comments", uint(id))
+	if err == nil {
+		if json.Unmarshal([]byte(commentStr), &comment) == nil {
+			cache.Srem(
+				fmt.Sprintf("article_comments:%d", comment.ArticleID),
+				strconv.Itoa(int(comment.ID)),
+			)
+		}
+	}
 	cache.Hdel("comments", uint(id))
-	cache.Srem(
-		fmt.Sprintf("article_comments:%d", comment.ArticleID),
-		strconv.Itoa(int(comment.ID)),
-	)
 
 	c.JSON(http.StatusOK, nil)
 }
