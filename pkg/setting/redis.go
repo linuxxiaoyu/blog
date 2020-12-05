@@ -19,16 +19,14 @@ func initCache() {
 
 	host := redisSection.Key("Host").MustString("127.0.0.1")
 	port := redisSection.Key("Port").MustUint(6379)
-	// user := redisSection.Key("User").MustString("")
-	// password := redisSection.Key("Password").MustString("")
+	password := redisSection.Key("Password").MustString("")
 	maxIdle := redisSection.Key("MaxIdle").MustUint(30)
 
 	pool = redis.NewPool(func() (redis.Conn, error) {
 		return redis.Dial(
 			"tcp",
 			fmt.Sprintf("%s:%d", host, port),
-			// redis.DialPassword(password),
-			// redis.DialUser
+			redis.DialPassword(password),
 		)
 	}, int(maxIdle))
 }

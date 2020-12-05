@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/linuxxiaoyu/blog/pkg/cache"
 	"github.com/linuxxiaoyu/blog/pkg/setting"
 )
 
@@ -23,6 +24,7 @@ func Articles(c *gin.Context) {
 	datas := []gin.H{}
 	for _, article := range articles {
 		datas = append(datas, articleResponse(&article))
+		cache.Hset("articles", article.ID, article)
 	}
 
 	c.JSON(http.StatusOK, datas)
