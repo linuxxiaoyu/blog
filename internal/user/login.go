@@ -13,10 +13,10 @@ import (
 
 // Login a user, return a token
 // GET /user
-// form: name password
+// query: name password
 func Login(c *gin.Context) {
-	name := c.PostForm("name")
-	password := c.PostForm("password")
+	name := c.Query("name")
+	password := c.Query("password")
 
 	valid := validation.Validation{}
 
