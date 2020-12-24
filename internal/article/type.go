@@ -3,8 +3,8 @@ package article
 import (
 	"time"
 
-	"github.com/linuxxiaoyu/blog/pkg/comment"
-	"github.com/linuxxiaoyu/blog/pkg/user"
+	"github.com/linuxxiaoyu/blog/internal/comment"
+	"github.com/linuxxiaoyu/blog/internal/user"
 )
 
 // Article is a table in db.

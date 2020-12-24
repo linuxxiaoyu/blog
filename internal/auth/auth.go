@@ -3,7 +3,7 @@ package auth
 import (
 	"time"
 
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 
 	"github.com/dgrijalva/jwt-go"
 )

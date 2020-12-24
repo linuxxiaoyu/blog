@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 func Set(key string, data interface{}) error {

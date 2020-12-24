@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/linuxxiaoyu/blog/pkg/auth"
-	"github.com/linuxxiaoyu/blog/pkg/cache"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
-	"github.com/linuxxiaoyu/blog/pkg/user"
+	"github.com/linuxxiaoyu/blog/internal/auth"
+	"github.com/linuxxiaoyu/blog/internal/cache"
+	"github.com/linuxxiaoyu/blog/internal/setting"
+	"github.com/linuxxiaoyu/blog/internal/user"
 
 	"github.com/gin-gonic/gin"
 )

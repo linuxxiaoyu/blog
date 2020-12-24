@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 func Hset(key string, id uint, value interface{}) error {

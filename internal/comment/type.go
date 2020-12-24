@@ -3,7 +3,7 @@ package comment
 import (
 	"time"
 
-	"github.com/linuxxiaoyu/blog/pkg/user"
+	"github.com/linuxxiaoyu/blog/internal/user"
 )
 
 // Comment is a table in db.

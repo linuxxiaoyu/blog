@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/linuxxiaoyu/blog/pkg/cache"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/cache"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 // Articles return 10 articles order by id

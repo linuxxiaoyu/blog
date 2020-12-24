@@ -8,12 +8,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/linuxxiaoyu/blog/pkg/cache"
-
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/cache"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 
 	"github.com/astaxie/beego/validation"
-
 	"github.com/gin-gonic/gin"
 )
 

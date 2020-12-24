@@ -3,12 +3,12 @@ package user
 import (
 	"net/http"
 
-	"github.com/linuxxiaoyu/blog/pkg/auth"
-	"github.com/linuxxiaoyu/blog/pkg/cache"
+	"github.com/linuxxiaoyu/blog/internal/auth"
+	"github.com/linuxxiaoyu/blog/internal/cache"
 
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 // Login a user, return a token

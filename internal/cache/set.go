@@ -2,7 +2,7 @@ package cache
 
 import (
 	"github.com/gomodule/redigo/redis"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 func Sadd(key, member string) error {

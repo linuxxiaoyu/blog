@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/linuxxiaoyu/blog/pkg/cache"
-	"github.com/linuxxiaoyu/blog/pkg/comment"
+	"github.com/linuxxiaoyu/blog/internal/cache"
+	"github.com/linuxxiaoyu/blog/internal/comment"
 
 	"github.com/gin-gonic/gin"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 // Get an article

@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/linuxxiaoyu/blog/pkg/cache"
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/cache"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 // Update an article

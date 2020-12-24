@@ -5,12 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/linuxxiaoyu/blog/pkg/cache"
-
-	"github.com/linuxxiaoyu/blog/pkg/setting"
-
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
+	"github.com/linuxxiaoyu/blog/internal/cache"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
 // New create an article.
