@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/linuxxiaoyu/blog/pkg/setting"
+	"github.com/linuxxiaoyu/blog/internal/setting"
 
 	"github.com/gin-gonic/gin"
 )
