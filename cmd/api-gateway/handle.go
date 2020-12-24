@@ -2,6 +2,11 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/linuxxiaoyu/blog/internal/article"
+	"github.com/linuxxiaoyu/blog/internal/comment"
+	jwt "github.com/linuxxiaoyu/blog/internal/middleware/auth"
+	"github.com/linuxxiaoyu/blog/internal/upload"
+	"github.com/linuxxiaoyu/blog/internal/user"
 )
 
 func handle(r *gin.Engine) {
