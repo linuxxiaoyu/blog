@@ -21,9 +21,9 @@ func Srem(key, member string) error {
 	return err
 }
 
-func Smembers(key string) ([]string, error) {
+func Smembers(key string) ([]int64, error) {
 	c := setting.RedisConn()
 	defer c.Close()
 
-	return redis.Strings(c.Do("SMEMBERS", key))
+	return redis.Int64s(c.Do("SMEMBERS", key))
 }

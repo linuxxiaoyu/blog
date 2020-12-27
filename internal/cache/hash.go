@@ -7,7 +7,7 @@ import (
 	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
-func Hset(key string, id uint, value interface{}) error {
+func Hset(key string, id uint32, value interface{}) error {
 	c := setting.RedisConn()
 	defer c.Close()
 
@@ -27,14 +27,14 @@ func Hset(key string, id uint, value interface{}) error {
 	return err
 }
 
-func Hget(key string, id uint) (string, error) {
+func Hget(key string, id uint32) (string, error) {
 	c := setting.RedisConn()
 	defer c.Close()
 
 	return redis.String(c.Do("HGET", key, id))
 }
 
-func Hdel(key string, id uint) error {
+func Hdel(key string, id uint32) error {
 	c := setting.RedisConn()
 	defer c.Close()
 
