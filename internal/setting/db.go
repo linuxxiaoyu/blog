@@ -9,9 +9,10 @@ import (
 )
 
 // DB for CRUD
-var DB *gorm.DB
+var db *gorm.DB
 
-func initDB() {
+func InitDB() {
+	initCfg()
 	database, err := cfg.GetSection("database")
 	if err != nil {
 		log.Fatalf("Fail to get section 'database': %v", err)
@@ -32,8 +33,15 @@ func initDB() {
 		dbName,
 	)
 
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Fail to open database: %v", err)
 	}
+}
+
+func DB() *gorm.DB {
+	if db == nil {
+		InitDB()
+	}
+	return db
 }

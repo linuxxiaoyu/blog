@@ -11,15 +11,19 @@ var (
 )
 
 // Init settings from conf/server.ini
-func Init() {
-	var err error
-	cfg, err = ini.Load("../../configs/server.ini")
-	if err != nil {
-		log.Fatalf("Fail to parse '../../configs/server.ini': %v", err)
+func initCfg() {
+	if cfg == nil {
+		var err error
+		cfg, err = ini.Load("../../configs/server.ini")
+		if err != nil {
+			log.Fatalf("Fail to parse '../../configs/server.ini': %v", err)
+		}
 	}
+}
 
+func Init() {
 	initServer()
-	initDB()
+	InitDB()
 	initJWT()
-	initCache()
+	InitCache()
 }

@@ -11,7 +11,8 @@ var (
 	pool *redis.Pool
 )
 
-func initCache() {
+func InitCache() {
+	initCfg()
 	redisSection, err := cfg.GetSection("redis")
 	if err != nil {
 		log.Fatalf("Fail to get section 'redis': %v", err)
@@ -33,5 +34,8 @@ func initCache() {
 
 // RedisConn returns a Conn from redis pool
 func RedisConn() redis.Conn {
+	if pool == nil {
+		InitCache()
+	}
 	return pool.Get()
 }

@@ -12,6 +12,7 @@ var (
 )
 
 func initServer() {
+	initCfg()
 	server, err := cfg.GetSection("server")
 	if err != nil {
 		log.Fatalf("Fail to get section 'server': %v", err)

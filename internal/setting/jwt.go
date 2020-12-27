@@ -9,6 +9,7 @@ var (
 )
 
 func initJWT() {
+	initCfg()
 	jwt, err := cfg.GetSection("jwt")
 	if err != nil {
 		log.Fatalf("Fail to get section 'jwt': %v", err)
