@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -38,4 +39,11 @@ func RedisConn() redis.Conn {
 		InitCache()
 	}
 	return pool.Get()
+}
+
+func RedisConnWithContext(ctx context.Context) (redis.Conn, error) {
+	if pool == nil {
+		InitCache()
+	}
+	return pool.GetContext(ctx)
 }

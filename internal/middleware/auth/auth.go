@@ -40,7 +40,7 @@ func Auth(c *gin.Context) {
 	resp := pb.AccountRequest{
 		Token: token,
 	}
-	ctx, cancel := context.WithTimeout(c, time.Second)
+	ctx, cancel := context.WithTimeout(c, 500*time.Second)
 	defer cancel()
 	r, err := client.ParseToken(ctx, &resp)
 	if err != nil {

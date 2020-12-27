@@ -51,7 +51,7 @@ func Login(c *gin.Context) {
 		Name:     name,
 		Password: password,
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
 	r, err := client.GetToken(ctx, &req)
 	if err != nil {
@@ -88,7 +88,7 @@ func Register(c *gin.Context) {
 	req.Name = name
 	req.Password = password
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
 
 	r, err := client.Register(ctx, &req)

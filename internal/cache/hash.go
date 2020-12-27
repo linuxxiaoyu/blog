@@ -1,14 +1,18 @@
 package cache
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
-func Hset(key string, id uint32, value interface{}) error {
-	c := setting.RedisConn()
+func Hset(ctx context.Context, key string, id uint32, value interface{}) error {
+	c, err := setting.RedisConnWithContext(ctx)
+	if err != nil {
+		return err
+	}
 	defer c.Close()
 
 	str := ""
@@ -23,12 +27,15 @@ func Hset(key string, id uint32, value interface{}) error {
 		str = string(bs)
 	}
 
-	_, err := c.Do("HSET", key, id, str)
+	_, err = c.Do("HSET", key, id, str)
 	return err
 }
 
-func Hget(key string, id uint32) (string, error) {
-	c := setting.RedisConn()
+func Hget(ctx context.Context, key string, id uint32) (string, error) {
+	c, err := setting.RedisConnWithContext(ctx)
+	if err != nil {
+		return "", err
+	}
 	defer c.Close()
 
 	return redis.String(c.Do("HGET", key, id))

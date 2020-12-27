@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/pkg/errors"
@@ -16,73 +17,73 @@ type User struct {
 	Password string
 }
 
-func GetUser(id uint32) (User, error) {
-	user, err := getUserFromCache(id)
+func GetUser(ctx context.Context, id uint32) (User, error) {
+	user, err := getUserFromCache(ctx, id)
 	if err == nil {
 		return user, err
 	}
 
-	db := setting.DB()
-	result := db.First(&user, id)
+	tx := setting.DB().WithContext(ctx)
+	result := tx.First(&user, id)
 	if result.Error != nil {
 		return user, result.Error
 	}
 
-	cache.Hset("users", id, user)
-	cache.Zadd("username", id, user.Name)
+	cache.Hset(ctx, "users", id, user)
+	cache.Zadd(ctx, "username", id, user.Name)
 	return user, nil
 }
 
-func GetUserByName(name string) (User, error) {
-	user, err := getUserByNameFromCache(name)
+func GetUserByName(ctx context.Context, name string) (User, error) {
+	user, err := getUserByNameFromCache(ctx, name)
 	if err == nil {
 		return user, err
 	}
 
-	db := setting.DB()
-	result := db.Where("name = ?", name).First(&user)
+	tx := setting.DB().WithContext(ctx)
+	result := tx.Where("name = ?", name).First(&user)
 	if result.Error != nil {
 		return user, result.Error
 	}
 
 	if result.RowsAffected > 0 {
-		cache.Zadd("username", user.ID, name)
-		cache.Hset("users", user.ID, user)
+		cache.Zadd(ctx, "username", user.ID, name)
+		cache.Hset(ctx, "users", user.ID, user)
 	}
 
 	return user, nil
 }
 
-func getUserFromCache(id uint32) (User, error) {
+func getUserFromCache(ctx context.Context, id uint32) (User, error) {
 	var user User
-	str, err := cache.Hget("users", id)
+	str, err := cache.Hget(ctx, "users", id)
 	if err == nil {
 		err = json.Unmarshal([]byte(str), &user)
 	}
 	return user, err
 }
 
-func getUserByNameFromCache(name string) (User, error) {
+func getUserByNameFromCache(ctx context.Context, name string) (User, error) {
 	var user User
-	id, err := cache.Zscore("username", name)
+	id, err := cache.Zscore(ctx, "username", name)
 	if err != nil {
 		return user, err
 	}
-	return getUserFromCache(id)
+	return getUserFromCache(ctx, id)
 }
 
-func CreateUser(user User) (uint32, error) {
+func CreateUser(ctx context.Context, user User) (uint32, error) {
 	if user.Name == "" || user.Password == "" {
 		return 0, errors.New("name and password can not empty")
 	}
 
-	db := setting.DB()
+	db := setting.DB().WithContext(ctx)
 	result := db.Create(&user)
 	if result.Error != nil {
 		return 0, errors.WithStack(result.Error)
 	}
 
-	cache.Hset("users", user.ID, user)
-	cache.Zadd("username", user.ID, user.Name)
+	cache.Hset(ctx, "users", user.ID, user)
+	cache.Zadd(ctx, "username", user.ID, user.Name)
 	return user.ID, nil
 }
