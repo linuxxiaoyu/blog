@@ -1,16 +1,27 @@
 package jwt
 
 import (
+	"log"
 	"net/http"
 	"time"
 
-	"github.com/linuxxiaoyu/blog/internal/auth"
-	"github.com/linuxxiaoyu/blog/internal/cache"
-	"github.com/linuxxiaoyu/blog/internal/setting"
-	"github.com/linuxxiaoyu/blog/internal/user"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 
 	"github.com/gin-gonic/gin"
+	pb "github.com/linuxxiaoyu/blog/api"
 )
+
+var client pb.AccountClient
+
+func init() {
+	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("dial account service failed: %v", err)
+	}
+	defer conn.Close()
+	client = pb.NewAccountClient(conn)
+}
 
 func forbidden(c *gin.Context) {
 	c.JSON(http.StatusForbidden, nil)
@@ -26,24 +37,18 @@ func Auth(c *gin.Context) {
 		return
 	}
 
-	claims, err := auth.ParseToken(token)
-	if err != nil || claims.ExpiresAt < time.Now().Unix() {
-		cache.Srem("tokens", token)
+	resp := pb.AccountRequest{
+		Token: token,
+	}
+	ctx, cancel := context.WithTimeout(c, time.Second)
+	defer cancel()
+	r, err := client.ParseToken(ctx, &resp)
+	if err != nil {
 		forbidden(c)
 		return
 	}
 
-	c.Set("uid", claims.ID)
-
-	var user user.User
-	db := setting.DB
-	result := db.First(&user, claims.ID)
-	if result.RowsAffected == 0 || user.Name != claims.Name {
-		forbidden(c)
-		return
-	}
-
-	cache.Sadd("tokens", token)
+	c.Set("uid", r.GetId())
 
 	c.Next()
 }
