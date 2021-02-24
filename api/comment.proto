@@ -35,7 +35,9 @@ message GetCommentResponse {
 // The request message containing article id and comment content.
 message PostCommentRequest {
     uint32 aid = 1;
-    string content = 2;
+    uint32 uid = 2;
+    string content = 3;
+    google.protobuf.Timestamp time = 4;
 }
 
 // The response message containing comment id.
