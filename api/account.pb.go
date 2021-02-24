@@ -14,6 +14,7 @@ import (
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -29,20 +30,18 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-// The request message containing the account's id, name and password.
-type AccountRequest struct {
+// The request message containing the account's id and name.
+type GetAccountRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id       uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name     string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Password string `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	Token    string `protobuf:"bytes,4,opt,name=token,proto3" json:"token,omitempty"`
+	Id   uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (x *AccountRequest) Reset() {
-	*x = AccountRequest{}
+func (x *GetAccountRequest) Reset() {
+	*x = GetAccountRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_account_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -50,13 +49,13 @@ func (x *AccountRequest) Reset() {
 	}
 }
 
-func (x *AccountRequest) String() string {
+func (x *GetAccountRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AccountRequest) ProtoMessage() {}
+func (*GetAccountRequest) ProtoMessage() {}
 
-func (x *AccountRequest) ProtoReflect() protoreflect.Message {
+func (x *GetAccountRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_account_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -68,52 +67,38 @@ func (x *AccountRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AccountRequest.ProtoReflect.Descriptor instead.
-func (*AccountRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAccountRequest.ProtoReflect.Descriptor instead.
+func (*GetAccountRequest) Descriptor() ([]byte, []int) {
 	return file_account_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *AccountRequest) GetId() uint32 {
+func (x *GetAccountRequest) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *AccountRequest) GetName() string {
+func (x *GetAccountRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *AccountRequest) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
-func (x *AccountRequest) GetToken() string {
-	if x != nil {
-		return x.Token
-	}
-	return ""
-}
-
-// The response message containing the account's id, name and token.
-type AccountResponse struct {
+// The response message containing the account's id, name and password.
+type GetAccountResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id    uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name  string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Token string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
+	Id       uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name     string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Password string `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
 }
 
-func (x *AccountResponse) Reset() {
-	*x = AccountResponse{}
+func (x *GetAccountResponse) Reset() {
+	*x = GetAccountResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_account_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -121,13 +106,13 @@ func (x *AccountResponse) Reset() {
 	}
 }
 
-func (x *AccountResponse) String() string {
+func (x *GetAccountResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AccountResponse) ProtoMessage() {}
+func (*GetAccountResponse) ProtoMessage() {}
 
-func (x *AccountResponse) ProtoReflect() protoreflect.Message {
+func (x *GetAccountResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_account_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -139,67 +124,394 @@ func (x *AccountResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AccountResponse.ProtoReflect.Descriptor instead.
-func (*AccountResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAccountResponse.ProtoReflect.Descriptor instead.
+func (*GetAccountResponse) Descriptor() ([]byte, []int) {
 	return file_account_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *AccountResponse) GetId() uint32 {
+func (x *GetAccountResponse) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *AccountResponse) GetName() string {
+func (x *GetAccountResponse) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *AccountResponse) GetToken() string {
+func (x *GetAccountResponse) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+// The request message containing the account's name and password.
+type PostAccountRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name     string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+}
+
+func (x *PostAccountRequest) Reset() {
+	*x = PostAccountRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_account_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PostAccountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostAccountRequest) ProtoMessage() {}
+
+func (x *PostAccountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostAccountRequest.ProtoReflect.Descriptor instead.
+func (*PostAccountRequest) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PostAccountRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PostAccountRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+// The response message containing the account's id.
+type PostAccountResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *PostAccountResponse) Reset() {
+	*x = PostAccountResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_account_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PostAccountResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostAccountResponse) ProtoMessage() {}
+
+func (x *PostAccountResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostAccountResponse.ProtoReflect.Descriptor instead.
+func (*PostAccountResponse) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PostAccountResponse) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+// The request message containing the account's id and name.
+type GetTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name     string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+}
+
+func (x *GetTokenRequest) Reset() {
+	*x = GetTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_account_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTokenRequest) ProtoMessage() {}
+
+func (x *GetTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTokenRequest.ProtoReflect.Descriptor instead.
+func (*GetTokenRequest) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetTokenRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *GetTokenRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+// The response message containing the jwt token string.
+type GetTokenResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+}
+
+func (x *GetTokenResponse) Reset() {
+	*x = GetTokenResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_account_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTokenResponse) ProtoMessage() {}
+
+func (x *GetTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTokenResponse.ProtoReflect.Descriptor instead.
+func (*GetTokenResponse) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetTokenResponse) GetToken() string {
 	if x != nil {
 		return x.Token
 	}
 	return ""
 }
 
+// The request message containing the jwt token string.
+type ParseTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+}
+
+func (x *ParseTokenRequest) Reset() {
+	*x = ParseTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_account_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ParseTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ParseTokenRequest) ProtoMessage() {}
+
+func (x *ParseTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ParseTokenRequest.ProtoReflect.Descriptor instead.
+func (*ParseTokenRequest) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ParseTokenRequest) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+// The response message without anything.
+type ParseTokenResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	E *emptypb.Empty `protobuf:"bytes,1,opt,name=e,proto3" json:"e,omitempty"`
+}
+
+func (x *ParseTokenResponse) Reset() {
+	*x = ParseTokenResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_account_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ParseTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ParseTokenResponse) ProtoMessage() {}
+
+func (x *ParseTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ParseTokenResponse.ProtoReflect.Descriptor instead.
+func (*ParseTokenResponse) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ParseTokenResponse) GetE() *emptypb.Empty {
+	if x != nil {
+		return x.E
+	}
+	return nil
+}
+
 var File_account_proto protoreflect.FileDescriptor
 
 var file_account_proto_rawDesc = []byte{
 	0x0a, 0x0d, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12,
-	0x08, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x22, 0x66, 0x0a, 0x0e, 0x41, 0x63, 0x63,
-	0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69,
-	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e,
-	0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12,
-	0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74,
-	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65,
-	0x6e, 0x22, 0x4b, 0x0a, 0x0f, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d,
-	0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65,
-	0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x32, 0x99,
-	0x02, 0x0a, 0x07, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x43, 0x0a, 0x0a, 0x47, 0x65,
-	0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x18, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x19, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x63,
-	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12,
-	0x41, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x18, 0x2e, 0x62, 0x6c,
-	0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69,
-	0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x00, 0x12, 0x43, 0x0a, 0x0a, 0x50, 0x61, 0x72, 0x73, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
-	0x12, 0x18, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x63, 0x63, 0x6f,
-	0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x62, 0x6c, 0x6f,
-	0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x41, 0x0a, 0x08, 0x52, 0x65, 0x67, 0x69, 0x73,
-	0x74, 0x65, 0x72, 0x12, 0x18, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41,
-	0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e,
-	0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x07, 0x5a, 0x05, 0x2e, 0x3b,
-	0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x0b, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x1a, 0x1b, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x65, 0x6d,
+	0x70, 0x74, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x37, 0x0a, 0x11, 0x47, 0x65, 0x74,
+	0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12,
+	0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x22, 0x54, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0d, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x44, 0x0a, 0x12, 0x50, 0x6f, 0x73, 0x74,
+	0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12,
+	0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x25,
+	0x0a, 0x13, 0x50, 0x6f, 0x73, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0d, 0x52, 0x02, 0x69, 0x64, 0x22, 0x41, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x54, 0x6f, 0x6b, 0x65,
+	0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x28, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x54,
+	0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05,
+	0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b,
+	0x65, 0x6e, 0x22, 0x29, 0x0a, 0x11, 0x50, 0x61, 0x72, 0x73, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x3a, 0x0a,
+	0x12, 0x50, 0x61, 0x72, 0x73, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a, 0x01, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16,
+	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
+	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x52, 0x01, 0x65, 0x32, 0xca, 0x02, 0x0a, 0x07, 0x41, 0x63,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x4f, 0x0a, 0x0a, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x12, 0x1e, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
+	0x31, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
+	0x31, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x52, 0x0a, 0x0b, 0x50, 0x6f, 0x73, 0x74, 0x41, 0x63,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x1f, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x76, 0x31, 0x2e, 0x50, 0x6f, 0x73, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x6f, 0x73, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x49, 0x0a, 0x08, 0x47, 0x65,
+	0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x1c, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x1d, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4f, 0x0a, 0x0a, 0x50, 0x61, 0x72, 0x73, 0x65, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x12, 0x1e, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
+	0x31, 0x2e, 0x50, 0x61, 0x72, 0x73, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x62, 0x6c, 0x6f, 0x67, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
+	0x31, 0x2e, 0x50, 0x61, 0x72, 0x73, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x07, 0x5a, 0x05, 0x2e, 0x3b, 0x61, 0x70, 0x69, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -214,25 +526,33 @@ func file_account_proto_rawDescGZIP() []byte {
 	return file_account_proto_rawDescData
 }
 
-var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_account_proto_goTypes = []interface{}{
-	(*AccountRequest)(nil),  // 0: blog.api.AccountRequest
-	(*AccountResponse)(nil), // 1: blog.api.AccountResponse
+	(*GetAccountRequest)(nil),   // 0: blog.api.v1.GetAccountRequest
+	(*GetAccountResponse)(nil),  // 1: blog.api.v1.GetAccountResponse
+	(*PostAccountRequest)(nil),  // 2: blog.api.v1.PostAccountRequest
+	(*PostAccountResponse)(nil), // 3: blog.api.v1.PostAccountResponse
+	(*GetTokenRequest)(nil),     // 4: blog.api.v1.GetTokenRequest
+	(*GetTokenResponse)(nil),    // 5: blog.api.v1.GetTokenResponse
+	(*ParseTokenRequest)(nil),   // 6: blog.api.v1.ParseTokenRequest
+	(*ParseTokenResponse)(nil),  // 7: blog.api.v1.ParseTokenResponse
+	(*emptypb.Empty)(nil),       // 8: google.protobuf.Empty
 }
 var file_account_proto_depIdxs = []int32{
-	0, // 0: blog.api.Account.GetAccount:input_type -> blog.api.AccountRequest
-	0, // 1: blog.api.Account.GetToken:input_type -> blog.api.AccountRequest
-	0, // 2: blog.api.Account.ParseToken:input_type -> blog.api.AccountRequest
-	0, // 3: blog.api.Account.Register:input_type -> blog.api.AccountRequest
-	1, // 4: blog.api.Account.GetAccount:output_type -> blog.api.AccountResponse
-	1, // 5: blog.api.Account.GetToken:output_type -> blog.api.AccountResponse
-	1, // 6: blog.api.Account.ParseToken:output_type -> blog.api.AccountResponse
-	1, // 7: blog.api.Account.Register:output_type -> blog.api.AccountResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	8, // 0: blog.api.v1.ParseTokenResponse.e:type_name -> google.protobuf.Empty
+	0, // 1: blog.api.v1.Account.GetAccount:input_type -> blog.api.v1.GetAccountRequest
+	2, // 2: blog.api.v1.Account.PostAccount:input_type -> blog.api.v1.PostAccountRequest
+	4, // 3: blog.api.v1.Account.GetToken:input_type -> blog.api.v1.GetTokenRequest
+	6, // 4: blog.api.v1.Account.ParseToken:input_type -> blog.api.v1.ParseTokenRequest
+	1, // 5: blog.api.v1.Account.GetAccount:output_type -> blog.api.v1.GetAccountResponse
+	3, // 6: blog.api.v1.Account.PostAccount:output_type -> blog.api.v1.PostAccountResponse
+	5, // 7: blog.api.v1.Account.GetToken:output_type -> blog.api.v1.GetTokenResponse
+	7, // 8: blog.api.v1.Account.ParseToken:output_type -> blog.api.v1.ParseTokenResponse
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_account_proto_init() }
@@ -242,7 +562,7 @@ func file_account_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_account_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AccountRequest); i {
+			switch v := v.(*GetAccountRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -254,7 +574,79 @@ func file_account_proto_init() {
 			}
 		}
 		file_account_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AccountResponse); i {
+			switch v := v.(*GetAccountResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_account_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PostAccountRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_account_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PostAccountResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_account_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_account_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetTokenResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_account_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ParseTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_account_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ParseTokenResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -272,7 +664,7 @@ func file_account_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_account_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -298,14 +690,14 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AccountClient interface {
-	// Get an account id by name, or get name by account id.
-	GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
-	// Get token by account name and password, return token string.
-	GetToken(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
-	// Parse token by token string, return account id and name.
-	ParseToken(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	// Get account by id.
+	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
 	// Register an account by name and password.
-	Register(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	PostAccount(ctx context.Context, in *PostAccountRequest, opts ...grpc.CallOption) (*PostAccountResponse, error)
+	// Get token by account id and name.
+	GetToken(ctx context.Context, in *GetTokenRequest, opts ...grpc.CallOption) (*GetTokenResponse, error)
+	// Parse token by token string, return account id and name.
+	ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenResponse, error)
 }
 
 type accountClient struct {
@@ -316,36 +708,36 @@ func NewAccountClient(cc grpc.ClientConnInterface) AccountClient {
 	return &accountClient{cc}
 }
 
-func (c *accountClient) GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
-	out := new(AccountResponse)
-	err := c.cc.Invoke(ctx, "/blog.api.Account/GetAccount", in, out, opts...)
+func (c *accountClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error) {
+	out := new(GetAccountResponse)
+	err := c.cc.Invoke(ctx, "/blog.api.v1.Account/GetAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountClient) GetToken(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
-	out := new(AccountResponse)
-	err := c.cc.Invoke(ctx, "/blog.api.Account/GetToken", in, out, opts...)
+func (c *accountClient) PostAccount(ctx context.Context, in *PostAccountRequest, opts ...grpc.CallOption) (*PostAccountResponse, error) {
+	out := new(PostAccountResponse)
+	err := c.cc.Invoke(ctx, "/blog.api.v1.Account/PostAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountClient) ParseToken(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
-	out := new(AccountResponse)
-	err := c.cc.Invoke(ctx, "/blog.api.Account/ParseToken", in, out, opts...)
+func (c *accountClient) GetToken(ctx context.Context, in *GetTokenRequest, opts ...grpc.CallOption) (*GetTokenResponse, error) {
+	out := new(GetTokenResponse)
+	err := c.cc.Invoke(ctx, "/blog.api.v1.Account/GetToken", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountClient) Register(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
-	out := new(AccountResponse)
-	err := c.cc.Invoke(ctx, "/blog.api.Account/Register", in, out, opts...)
+func (c *accountClient) ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenResponse, error) {
+	out := new(ParseTokenResponse)
+	err := c.cc.Invoke(ctx, "/blog.api.v1.Account/ParseToken", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -354,31 +746,31 @@ func (c *accountClient) Register(ctx context.Context, in *AccountRequest, opts .
 
 // AccountServer is the server API for Account service.
 type AccountServer interface {
-	// Get an account id by name, or get name by account id.
-	GetAccount(context.Context, *AccountRequest) (*AccountResponse, error)
-	// Get token by account name and password, return token string.
-	GetToken(context.Context, *AccountRequest) (*AccountResponse, error)
-	// Parse token by token string, return account id and name.
-	ParseToken(context.Context, *AccountRequest) (*AccountResponse, error)
+	// Get account by id.
+	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
 	// Register an account by name and password.
-	Register(context.Context, *AccountRequest) (*AccountResponse, error)
+	PostAccount(context.Context, *PostAccountRequest) (*PostAccountResponse, error)
+	// Get token by account id and name.
+	GetToken(context.Context, *GetTokenRequest) (*GetTokenResponse, error)
+	// Parse token by token string, return account id and name.
+	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenResponse, error)
 }
 
 // UnimplementedAccountServer can be embedded to have forward compatible implementations.
 type UnimplementedAccountServer struct {
 }
 
-func (*UnimplementedAccountServer) GetAccount(context.Context, *AccountRequest) (*AccountResponse, error) {
+func (*UnimplementedAccountServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
 }
-func (*UnimplementedAccountServer) GetToken(context.Context, *AccountRequest) (*AccountResponse, error) {
+func (*UnimplementedAccountServer) PostAccount(context.Context, *PostAccountRequest) (*PostAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostAccount not implemented")
+}
+func (*UnimplementedAccountServer) GetToken(context.Context, *GetTokenRequest) (*GetTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetToken not implemented")
 }
-func (*UnimplementedAccountServer) ParseToken(context.Context, *AccountRequest) (*AccountResponse, error) {
+func (*UnimplementedAccountServer) ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParseToken not implemented")
-}
-func (*UnimplementedAccountServer) Register(context.Context, *AccountRequest) (*AccountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 
 func RegisterAccountServer(s *grpc.Server, srv AccountServer) {
@@ -386,7 +778,7 @@ func RegisterAccountServer(s *grpc.Server, srv AccountServer) {
 }
 
 func _Account_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountRequest)
+	in := new(GetAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -395,16 +787,34 @@ func _Account_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/blog.api.Account/GetAccount",
+		FullMethod: "/blog.api.v1.Account/GetAccount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).GetAccount(ctx, req.(*AccountRequest))
+		return srv.(AccountServer).GetAccount(ctx, req.(*GetAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_PostAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).PostAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/blog.api.v1.Account/PostAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).PostAccount(ctx, req.(*PostAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Account_GetToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountRequest)
+	in := new(GetTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -413,16 +823,16 @@ func _Account_GetToken_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/blog.api.Account/GetToken",
+		FullMethod: "/blog.api.v1.Account/GetToken",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).GetToken(ctx, req.(*AccountRequest))
+		return srv.(AccountServer).GetToken(ctx, req.(*GetTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Account_ParseToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountRequest)
+	in := new(ParseTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -431,39 +841,25 @@ func _Account_ParseToken_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/blog.api.Account/ParseToken",
+		FullMethod: "/blog.api.v1.Account/ParseToken",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).ParseToken(ctx, req.(*AccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Account_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AccountServer).Register(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/blog.api.Account/Register",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).Register(ctx, req.(*AccountRequest))
+		return srv.(AccountServer).ParseToken(ctx, req.(*ParseTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 var _Account_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "blog.api.Account",
+	ServiceName: "blog.api.v1.Account",
 	HandlerType: (*AccountServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetAccount",
 			Handler:    _Account_GetAccount_Handler,
+		},
+		{
+			MethodName: "PostAccount",
+			Handler:    _Account_PostAccount_Handler,
 		},
 		{
 			MethodName: "GetToken",
@@ -472,10 +868,6 @@ var _Account_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ParseToken",
 			Handler:    _Account_ParseToken_Handler,
-		},
-		{
-			MethodName: "Register",
-			Handler:    _Account_Register_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

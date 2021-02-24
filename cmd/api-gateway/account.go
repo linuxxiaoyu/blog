@@ -47,7 +47,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	req := pb.AccountRequest{
+	req := pb.GetTokenRequest{
 		Name:     name,
 		Password: password,
 	}
@@ -84,14 +84,14 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	var req pb.AccountRequest
+	var req pb.PostAccountRequest
 	req.Name = name
 	req.Password = password
 
 	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
 
-	r, err := client.Register(ctx, &req)
+	r, err := client.PostAccount(ctx, &req)
 	if err != nil {
 		c.JSON(http.StatusForbidden, nil)
 		return

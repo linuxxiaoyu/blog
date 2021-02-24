@@ -1,32 +1,64 @@
 syntax = "proto3";
 
-package blog.api;
+import "google/protobuf/empty.proto";
+
+package blog.api.v1;
 
 option go_package = ".;api";
 
 // The account service definition.
 service Account {
-    // Get an account id by name, or get name by account id.
-    rpc GetAccount(AccountRequest) returns (AccountResponse) {}
-    // Get token by account name and password, return token string.
-    rpc GetToken(AccountRequest) returns (AccountResponse) {}
-    // Parse token by token string, return account id and name.
-    rpc ParseToken(AccountRequest) returns (AccountResponse) {}
+    // Get account by id.
+    rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {}
     // Register an account by name and password.
-    rpc Register(AccountRequest) returns (AccountResponse) {}
+    rpc PostAccount(PostAccountRequest) returns (PostAccountResponse) {}
+    // Get token by account id and name.
+    rpc GetToken(GetTokenRequest) returns (GetTokenResponse) {}
+    // Parse token by token string, return account id and name.
+    rpc ParseToken(ParseTokenRequest) returns (ParseTokenResponse) {}
 }
 
-// The request message containing the account's id, name and password.
-message AccountRequest {
+// The request message containing the account's id and name.
+message GetAccountRequest {
+    uint32 id = 1;
+    string name = 2;
+}
+
+// The response message containing the account's id, name and password.
+message GetAccountResponse {
     uint32 id = 1;
     string name = 2;
     string password = 3;
-    string token = 4;
 }
 
-// The response message containing the account's id, name and token.
-message AccountResponse {
+// The request message containing the account's name and password.
+message PostAccountRequest {
+    string name = 1;
+    string password = 2;
+}
+
+// The response message containing the account's id.
+message PostAccountResponse {
     uint32 id = 1;
-    string name = 2;
-    string token = 3;
+}
+
+// The request message containing the account's id and name.
+message GetTokenRequest {
+    string name = 1;
+    string password = 2;
+}
+
+// The response message containing the jwt token string.
+message GetTokenResponse {
+    string token = 1;
+}
+
+// The request message containing the jwt token string.
+message ParseTokenRequest {
+    string token = 1;
+}
+
+// The response message without anything.
+message ParseTokenResponse {
+    google.protobuf.Empty e = 1;
 }

@@ -37,18 +37,18 @@ func Auth(c *gin.Context) {
 		return
 	}
 
-	resp := pb.AccountRequest{
+	resp := pb.ParseTokenRequest{
 		Token: token,
 	}
-	ctx, cancel := context.WithTimeout(c, 500*time.Second)
+	ctx, cancel := context.WithTimeout(c, 500*time.Millisecond)
 	defer cancel()
-	r, err := client.ParseToken(ctx, &resp)
+	_, err := client.ParseToken(ctx, &resp)
 	if err != nil {
 		forbidden(c)
 		return
 	}
 
-	c.Set("uid", r.GetId())
+	// c.Set("uid", r.GetId())
 
 	c.Next()
 }
