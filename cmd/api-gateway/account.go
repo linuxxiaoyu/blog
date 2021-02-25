@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	client pb.AccountClient
+	accountClient pb.AccountClient
 )
 
 func init() {
@@ -23,13 +23,13 @@ func init() {
 		log.Fatalf("dial account service failed: %v", err)
 	}
 	// defer conn.Close()
-	client = pb.NewAccountClient(conn)
+	accountClient = pb.NewAccountClient(conn)
 }
 
-// Login a user, return a token
+// login a user, return a token
 // GET /user
 // query: name password
-func Login(c *gin.Context) {
+func login(c *gin.Context) {
 	name := c.Query("name")
 	password := c.Query("password")
 
@@ -53,7 +53,7 @@ func Login(c *gin.Context) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
-	r, err := client.GetToken(ctx, &req)
+	r, err := accountClient.GetToken(ctx, &req)
 	if err != nil {
 		c.JSON(http.StatusForbidden, nil)
 		return
@@ -64,10 +64,10 @@ func Login(c *gin.Context) {
 	})
 }
 
-// Register a user
+// register a user
 // POST /user
 // form: name password
-func Register(c *gin.Context) {
+func register(c *gin.Context) {
 	name := html.EscapeString(c.PostForm("name"))
 	password := c.PostForm("password")
 
@@ -91,7 +91,7 @@ func Register(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
 
-	r, err := client.PostAccount(ctx, &req)
+	r, err := accountClient.PostAccount(ctx, &req)
 	if err != nil {
 		c.JSON(http.StatusForbidden, nil)
 		return
