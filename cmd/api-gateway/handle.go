@@ -12,17 +12,17 @@ func handle(r *gin.Engine) {
 		gUser.GET("", login)
 	}
 
-	// gArticle := r.Group("/articles")
-	// {
-	// 	gArticle.GET("", article.Articles)
-	// 	gArticle.GET("/:id", article.Get)
-	// }
-	// gArticle.Use(jwt.Auth)
-	// {
-	// 	gArticle.POST("", article.New)
-	// 	gArticle.DELETE("/:id", article.Delete)
-	// 	gArticle.PUT("/:id", article.Update)
-	// }
+	gArticle := r.Group("/articles")
+	{
+		gArticle.GET("", getArticles)
+		gArticle.GET("/:id", getArticle)
+	}
+	gArticle.Use(auth.Auth)
+	{
+		gArticle.POST("", newArticle)
+		gArticle.DELETE("/:id", deleteArticle)
+		gArticle.PUT("/:id", updateArticle)
+	}
 
 	gComment := r.Group("/comments")
 	gComment.Use(auth.Auth)
