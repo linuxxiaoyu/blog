@@ -29,6 +29,9 @@ func init() {
 	commentClient = pb.NewCommentClient(conn)
 }
 
+// New a comment by article_id and user_id
+// POST /comments
+// form: token aid content
 func newComment(c *gin.Context) {
 	aid, _ := strconv.ParseUint(c.PostForm("aid"), 10, 32)
 	uid, _ := c.Get("uid")
@@ -62,6 +65,9 @@ func newComment(c *gin.Context) {
 	})
 }
 
+// Delete a comment by comment_id
+// DELETE /comments/:id
+// form: token
 func deleteComment(c *gin.Context) {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
 	uid, _ := c.Get("uid")
@@ -79,6 +85,9 @@ func deleteComment(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
+// Update a comment by comment_id
+// PUT /comments/:id
+// form: token content
 func updateComment(c *gin.Context) {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
 	uid, _ := c.Get("uid")
