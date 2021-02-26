@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 package blog.api.v1;
 
 option go_package = ".;api";
@@ -60,5 +58,5 @@ message ParseTokenRequest {
 
 // The response message without anything.
 message ParseTokenResponse {
-    google.protobuf.Empty e = 1;
+    uint32 uid = 1;
 }
