@@ -80,7 +80,7 @@ func (s *service) ParseToken(ctx context.Context, req *pb.ParseTokenRequest) (*p
 		return &resp, errors.New("forbidden")
 	}
 
-	// resp.Id = claims.ID
+	resp.Uid = claims.ID
 	// resp.Name = claims.Name
 	return &resp, nil
 }
@@ -100,7 +100,7 @@ func (s *service) PostAccount(ctx context.Context, req *pb.PostAccountRequest) (
 		var user data.User
 		user.Name = req.Name
 		user.Password = addSalt(req.Password)
-		id, err := data.CreateUser(ctx, user)
+		id, err := data.CreateUser(ctx, &user)
 		resp.Id = id
 		return &resp, err
 	}
