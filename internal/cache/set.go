@@ -1,15 +1,20 @@
 package cache
 
 import (
+	"context"
+
 	"github.com/gomodule/redigo/redis"
 	"github.com/linuxxiaoyu/blog/internal/setting"
 )
 
-func Sadd(key, member string) error {
-	c := setting.RedisConn()
+func Sadd(ctx context.Context, key, member string) error {
+	c, err := setting.RedisConnWithContext(ctx)
+	if err != nil {
+		return err
+	}
 	defer c.Close()
 
-	_, err := c.Do("SADD", key, member)
+	_, err = c.Do("SADD", key, member)
 	return err
 }
 

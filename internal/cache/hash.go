@@ -41,10 +41,10 @@ func Hget(ctx context.Context, key string, id uint32) (string, error) {
 	return redis.String(c.Do("HGET", key, id))
 }
 
-func Hdel(key string, id uint32) error {
-	c := setting.RedisConn()
+func Hdel(ctx context.Context, key string, id uint32) error {
+	c, err := setting.RedisConnWithContext(ctx)
 	defer c.Close()
 
-	_, err := c.Do("HDEL", key, id)
+	_, err = c.Do("HDEL", key, id)
 	return err
 }
