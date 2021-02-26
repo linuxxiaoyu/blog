@@ -2,13 +2,14 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/linuxxiaoyu/blog/internal/middleware/auth"
 )
 
 func handle(r *gin.Engine) {
 	gUser := r.Group("/user")
 	{
-		gUser.POST("", Register)
-		gUser.GET("", Login)
+		gUser.POST("", register)
+		gUser.GET("", login)
 	}
 
 	// gArticle := r.Group("/articles")
@@ -23,13 +24,13 @@ func handle(r *gin.Engine) {
 	// 	gArticle.PUT("/:id", article.Update)
 	// }
 
-	// gComment := r.Group("/comments")
-	// gComment.Use(jwt.Auth)
-	// {
-	// 	gComment.POST("", comment.New)
-	// 	gComment.DELETE("/:id", comment.Delete)
-	// 	gComment.PUT("/:id", comment.Update)
-	// }
+	gComment := r.Group("/comments")
+	gComment.Use(auth.Auth)
+	{
+		gComment.POST("", newComment)
+		gComment.DELETE("/:id", deleteComment)
+		gComment.PUT("/:id", updateComment)
+	}
 
 	// gUpload := r.Group("/upload")
 	// gUpload.Use(jwt.Auth)
