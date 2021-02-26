@@ -72,7 +72,10 @@ func getUserByNameFromCache(ctx context.Context, name string) (User, error) {
 	return getUserFromCache(ctx, id)
 }
 
-func CreateUser(ctx context.Context, user User) (uint32, error) {
+func CreateUser(ctx context.Context, user *User) (uint32, error) {
+	if user == nil {
+		return 0, errors.New("user is nil")
+	}
 	if user.Name == "" || user.Password == "" {
 		return 0, errors.New("name and password can not empty")
 	}
