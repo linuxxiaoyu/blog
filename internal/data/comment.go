@@ -55,6 +55,9 @@ func DeleteComment(ctx context.Context, id, uid uint32) error {
 	if result.Error != nil {
 		return result.Error
 	}
+	if result.RowsAffected <= 0 {
+		return errors.New("not found")
+	}
 
 	commentStr, err := cache.Hget(ctx, "comments", id)
 	if err == nil {
@@ -73,12 +76,12 @@ func UpdateComment(ctx context.Context, comment *Comment) error {
 	if comment == nil {
 		return errors.New("comment is nil")
 	}
-	if comment.UID <= 0 || comment.AID <= 0 {
-		return errors.New("uid and aid can't smaller than 0")
+	if comment.UID <= 0 || comment.ID <= 0 {
+		return errors.New("uid and id can't smaller than 0")
 	}
 
 	tx := setting.DB().WithContext(ctx)
-	result := tx.Save(&comment)
+	result := tx.UpdateColumns(&comment)
 	if result.Error != nil {
 		return result.Error
 	}

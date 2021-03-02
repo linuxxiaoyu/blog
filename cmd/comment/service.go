@@ -11,11 +11,13 @@ import (
 type service struct{}
 
 // TODO
-func (s *service) GetComment(ctx context.Context, req *pb.GetCommentRequest) (*pb.GetCommentResponse, error) {
+func (s *service) GetComment(ctx context.Context,
+	req *pb.GetCommentRequest) (*pb.GetCommentResponse, error) {
 	return nil, nil
 }
 
-func (s *service) PostComment(ctx context.Context, req *pb.PostCommentRequest) (*pb.PostCommentResponse, error) {
+func (s *service) PostComment(ctx context.Context,
+	req *pb.PostCommentRequest) (*pb.PostCommentResponse, error) {
 	var resp pb.PostCommentResponse
 	if req == nil {
 		return &resp, errors.New("req is null")
@@ -27,19 +29,18 @@ func (s *service) PostComment(ctx context.Context, req *pb.PostCommentRequest) (
 		Time:    req.GetTime().AsTime(),
 	}
 
-	// FIXME: success when article not exist
 	id, err := data.CreateComment(ctx, &comment)
 	resp.Id = id
 	return &resp, err
 }
 
-func (s *service) PutComment(ctx context.Context, req *pb.PutCommentRequest) (*pb.PutCommentResponse, error) {
+func (s *service) PutComment(ctx context.Context,
+	req *pb.PutCommentRequest) (*pb.PutCommentResponse, error) {
 	var resp pb.PutCommentResponse
 	if req == nil {
 		return &resp, errors.New("req is null")
 	}
 
-	// CHECKME: when uid wrong
 	comment := data.Comment{
 		ID:      req.GetId(),
 		UID:     req.GetUid(),
@@ -49,7 +50,8 @@ func (s *service) PutComment(ctx context.Context, req *pb.PutCommentRequest) (*p
 	return &resp, err
 }
 
-func (s *service) DeleteComment(ctx context.Context, req *pb.DeleteCommentRequest) (*pb.DeleteCommentResponse, error) {
+func (s *service) DeleteComment(ctx context.Context,
+	req *pb.DeleteCommentRequest) (*pb.DeleteCommentResponse, error) {
 	var resp pb.DeleteCommentResponse
 	if req == nil {
 		return &resp, errors.New("req is null")

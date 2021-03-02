@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"html"
 	"log"
 	"net/http"
@@ -29,7 +28,7 @@ func init() {
 	commentClient = pb.NewCommentClient(conn)
 }
 
-// New a comment by article_id and user_id
+// newComment new a comment by article_id and user_id
 // POST /comments
 // form: token aid content
 func newComment(c *gin.Context) {
@@ -40,7 +39,16 @@ func newComment(c *gin.Context) {
 	valid := validation.Validation{}
 	valid.Required(content, "content").Message("content can't empty")
 	if valid.HasErrors() || aid == 0 {
-		fmt.Println(403)
+		c.JSON(http.StatusForbidden, nil)
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
+	defer cancel()
+	reqA := pb.GetArticleRequest{
+		Id: uint32(aid),
+	}
+	_, err := articleClient.GetArticle(ctx, &reqA)
+	if err != nil {
 		c.JSON(http.StatusForbidden, nil)
 		return
 	}
@@ -51,11 +59,9 @@ func newComment(c *gin.Context) {
 		Content: content,
 		Time:    timestamppb.Now(),
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
-	defer cancel()
+
 	r, err := commentClient.PostComment(ctx, &req)
 	if err != nil {
-		fmt.Println(err)
 		c.JSON(http.StatusForbidden, nil)
 		return
 	}
@@ -65,7 +71,7 @@ func newComment(c *gin.Context) {
 	})
 }
 
-// Delete a comment by comment_id
+// deleteComment delete a comment by comment_id
 // DELETE /comments/:id
 // form: token
 func deleteComment(c *gin.Context) {
@@ -85,12 +91,16 @@ func deleteComment(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
-// Update a comment by comment_id
+// updateComment update a comment by comment_id
 // PUT /comments/:id
 // form: token content
 func updateComment(c *gin.Context) {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
 	uid, _ := c.Get("uid")
+	if id <= 0 {
+		c.JSON(http.StatusForbidden, nil)
+		return
+	}
 
 	content := html.EscapeString(c.PostForm("content"))
 	valid := validation.Validation{}
