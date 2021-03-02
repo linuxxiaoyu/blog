@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -31,7 +30,12 @@ func forbidden(c *gin.Context) {
 
 // form: token
 func Auth(c *gin.Context) {
-	token := c.PostForm("token")
+	var token string
+	if c.Request.Method == "DELETE" {
+		token = c.Query("token")
+	} else {
+		token = c.PostForm("token")
+	}
 	if token == "" {
 		c.JSON(http.StatusUnauthorized, nil)
 		c.Abort()
@@ -45,7 +49,6 @@ func Auth(c *gin.Context) {
 	defer cancel()
 	r, err := client.ParseToken(ctx, &req)
 	if err != nil {
-		fmt.Println(err)
 		forbidden(c)
 		return
 	}
