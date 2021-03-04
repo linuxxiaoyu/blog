@@ -28,10 +28,11 @@ message GetArticleRequest {
 
 // The response message containing uid, article title, content and create time.
 message GetArticleResponse {
-    uint32 uid = 1;
-    string title = 2;
-    string content = 3;
-    google.protobuf.Timestamp time = 4;
+    uint32 id = 1;
+    uint32 uid = 2;
+    string title = 3;
+    string content = 4;
+    google.protobuf.Timestamp time = 5;
 }
 
 // The request message containing nothing.

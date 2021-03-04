@@ -40,6 +40,7 @@ func (s *service) GetArticles(ctx context.Context,
 	}
 	for _, article := range articles {
 		resp.Rs = append(resp.Rs, &pb.GetArticleResponse{
+			Id:      article.ID,
 			Uid:     article.AuthorID,
 			Title:   article.Title,
 			Content: article.Content,
@@ -90,6 +91,6 @@ func (s *service) PutArticle(ctx context.Context,
 		req.GetId(),
 		req.GetUid(),
 		req.GetTitle(),
-		req.Content,
+		req.GetContent(),
 	)
 }

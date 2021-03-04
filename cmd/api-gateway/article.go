@@ -28,36 +28,96 @@ func init() {
 	articleClient = pb.NewArticleClient(conn)
 }
 
-// Articles return 10 articles order by id
+// getArticles return 10 articles order by id
 // GET /articles
 func getArticles(c *gin.Context) {
 	req := pb.GetArticlesRequest{}
 	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
 	r, err := articleClient.GetArticles(ctx, &req)
-	if err != nil {
+	if err != nil || len(r.Rs) == 0 {
 		c.JSON(http.StatusNotFound, nil)
 		return
 	}
 
-	// articles := make([]gin.H, 10)
-	// for _, article := range r.Rs {
-	// 	articles = append(articles, gin.H{
-	// 		"uid":     article.GetUid(),
-	// 		"title":   article.GetTitle(),
-	// 		"context": article.GetContent(),
-	// 		"time":    article.GetTime(),
-	// 	})
-	// }
-	c.JSON(http.StatusOK, r.Rs)
+	// m[aid] = article info
+	m := map[uint32]gin.H{}
+	resps := r.GetRs()
+	uids := make([]uint32, 0, len(r.Rs))
+	aids := make([]uint32, 0, len(r.Rs))
+	for _, resp := range resps {
+		// append article author uids
+		uids = append(uids, resp.GetUid())
+		aids = append(aids, resp.GetId())
+		m[resp.GetId()] = gin.H{
+			"title":   resp.GetTitle(),
+			"content": resp.GetContent(),
+			"time": resp.GetTime().
+				AsTime().Local().Format("2006-01-02 15:04:05"),
+		}
+	}
+
+	names := map[uint32]string{}
+	rC, err := commentClient.GetCommentsByAids(ctx,
+		&pb.GetCommentsByAidsRequest{Aids: aids})
+	if err == nil {
+		for _, comm := range rC.GetComments() {
+			infos := comm.GetInfos()
+			for _, info := range infos {
+				// append comment uids
+				uids = append(uids, info.Uid)
+			}
+		}
+	}
+
+	rA, err := accountClient.GetAccounts(ctx,
+		&pb.GetAccountsRequest{Ids: uids})
+	if err != nil {
+		// do nothing
+	}
+	names = rA.GetNames()
+	if err == nil {
+		for aid, comm := range rC.GetComments() {
+			infos := comm.GetInfos()
+			comms := make([]gin.H, 0, len(infos))
+			for _, info := range infos {
+				comms = append(comms, gin.H{
+					"content": info.GetContent(),
+					"time":    info.GetTime().AsTime().Local().Format("2006-01-02 15:04:05"),
+					"name":    names[info.GetUid()],
+				})
+			}
+			m[aid]["comments"] = comms
+		}
+	}
+
+	for _, resp := range resps {
+		m[resp.GetId()]["author"] = names[resp.Uid]
+	}
+
+	articles := []gin.H{}
+	for _, article := range m {
+		articles = append(articles, article)
+	}
+	c.JSON(http.StatusOK, articles)
 }
 
-// Get an article
+// getArticle get an article by id
 // GET /articles/:id
 func getArticle(c *gin.Context) {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	idStr, b := c.Params.Get("id")
+	if !b {
+		c.JSON(http.StatusNotFound, nil)
+		return
+	}
+	id64, _ := strconv.ParseUint(idStr, 10, 32)
+	if id64 <= 0 {
+		c.JSON(http.StatusNotFound, nil)
+		return
+	}
 
-	req := pb.GetArticleRequest{Id: uint32(id)}
+	id := uint32(id64)
+	req := pb.GetArticleRequest{Id: id}
 	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
 	r, err := articleClient.GetArticle(ctx, &req)
@@ -65,16 +125,52 @@ func getArticle(c *gin.Context) {
 		c.JSON(http.StatusNotFound, nil)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"title":   r.GetTitle(),
-		"time":    r.GetTime(),
-		"content": r.GetContent(),
-		"uid":     r.GetUid(),
-	})
+	h := gin.H{}
+	h["title"] = r.GetTitle()
+	h["content"] = r.GetContent()
+	h["time"] = r.GetTime().AsTime().Local().Format("2006-01-02 15:04:05")
+
+	uid := r.GetUid()
+	// add comments
+	rC, err := commentClient.GetCommentsByAids(ctx,
+		&pb.GetCommentsByAidsRequest{
+			Aids: []uint32{id},
+		})
+	if err != nil {
+		rA, err := accountClient.GetAccount(ctx, &pb.GetAccountRequest{Id: uid})
+		if err == nil {
+			h["author"] = rA.GetName()
+		}
+		c.JSON(http.StatusOK, h)
+		return
+	}
+
+	infos := rC.GetComments()[id].GetInfos()
+	uids := make([]uint32, 0, len(infos)+1)
+	// Get all user names, include article author's name.
+	uids = append(uids, uid)
+	for _, comment := range infos {
+		uids = append(uids, comment.GetUid())
+	}
+	resp, err := accountClient.GetAccounts(ctx, &pb.GetAccountsRequest{Ids: uids})
+	if err == nil {
+		comms := make([]gin.H, 0, len(infos))
+		for _, comment := range infos {
+			comms = append(comms, gin.H{
+				"name":    resp.Names[comment.GetUid()],
+				"content": comment.GetContent(),
+				"time":    comment.GetTime().AsTime().Local().Format("2006-01-02 15:04:05"),
+			})
+		}
+		h["comments"] = comms
+	}
+	h["author"] = resp.Names[uid]
+
+	c.JSON(http.StatusOK, h)
 }
 
-// New create an article.
-// POST /article
+// newArticle create an article.
+// POST /articles
 // form: token title content
 func newArticle(c *gin.Context) {
 	title := html.EscapeString(c.PostForm("title"))
@@ -104,12 +200,10 @@ func newArticle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"id": r.GetId(),
-	})
+	c.JSON(http.StatusOK, r)
 }
 
-// Delete an article
+// deleteArticle delete an article
 // DELETE /articles/:id
 // form: token
 func deleteArticle(c *gin.Context) {
@@ -131,7 +225,7 @@ func deleteArticle(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
-// Update an article
+// updateArticle update an article
 // PUT /articles/:id
 // form: token title content
 func updateArticle(c *gin.Context) {

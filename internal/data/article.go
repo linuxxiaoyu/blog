@@ -20,7 +20,7 @@ type Article struct {
 func GetArticles(ctx context.Context) ([]Article, error) {
 	articles := []Article{}
 	tx := setting.DB().WithContext(ctx)
-	result := tx.Preload("Author").Preload("Comments.User").Order("time desc").Find(&articles).Limit(10)
+	result := tx.Order("time desc").Find(&articles).Limit(10)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -31,9 +31,12 @@ func GetArticles(ctx context.Context) ([]Article, error) {
 func GetArticle(ctx context.Context, id uint32) (Article, error) {
 	article := Article{ID: id}
 	tx := setting.DB().WithContext(ctx)
-	result := tx.Preload("Author").Preload("Comments.User").First(&article)
+	result := tx.First(&article)
 	if result.Error != nil {
 		return article, result.Error
+	}
+	if result.RowsAffected <= 0 {
+		return article, errors.New("not found")
 	}
 
 	cache.Hset(ctx, "articles", id, article)
@@ -64,6 +67,9 @@ func DeleteArticle(ctx context.Context, id, uid uint32) error {
 	if result.Error != nil {
 		return result.Error
 	}
+	if result.RowsAffected == 0 {
+		return errors.New("not found")
+	}
 
 	cache.Hdel(ctx, "articles", id)
 	return nil
@@ -77,10 +83,12 @@ func UpdateArticle(ctx context.Context, id, uid uint32, title, content string) e
 		return result.Error
 	}
 
-	if result.RowsAffected == 0 || article.AuthorID != uid {
+	if id <= 0 || result.RowsAffected == 0 || article.AuthorID != uid {
 		return errors.New("Forbidden")
 	}
 
+	article.Title = title
+	article.Content = content
 	result = tx.Save(&article)
 	if result.Error != nil {
 		return result.Error
