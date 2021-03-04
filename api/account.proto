@@ -8,6 +8,8 @@ option go_package = ".;api";
 service Account {
     // Get account by id.
     rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {}
+    // Get accounts by ids.
+    rpc GetAccounts(GetAccountsRequest) returns (GetAccountsResponse) {}
     // Register an account by name and password.
     rpc PostAccount(PostAccountRequest) returns (PostAccountResponse) {}
     // Get token by account id and name.
@@ -27,6 +29,14 @@ message GetAccountResponse {
     uint32 id = 1;
     string name = 2;
     string password = 3;
+}
+
+message GetAccountsRequest {
+    repeated uint32 ids = 1;
+}
+
+message GetAccountsResponse {
+    map<uint32, string> names = 1;
 }
 
 // The request message containing the account's name and password.

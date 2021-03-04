@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 
 	"github.com/linuxxiaoyu/blog/internal/cache"
 	"github.com/linuxxiaoyu/blog/internal/setting"
@@ -32,6 +33,29 @@ func GetUser(ctx context.Context, id uint32) (User, error) {
 	cache.Hset(ctx, "users", id, user)
 	cache.Zadd(ctx, "username", id, user.Name)
 	return user, nil
+}
+
+func GetUsers(ctx context.Context, ids []uint32) (map[uint32]string, error) {
+	if ids == nil || len(ids) == 0 {
+		return nil, errors.New("ids can't empty")
+	}
+	tx := setting.DB().WithContext(ctx)
+	users := []User{}
+	m := map[uint32]string{}
+	result := tx.Where("id IN ?", ids).FindInBatches(&users, 100, func(tx *gorm.DB, batch int) error {
+		for _, user := range users {
+			m[user.ID] = user.Name
+		}
+		users = users[0:0]
+		return nil
+	})
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	if result.RowsAffected <= 0 {
+		return nil, errors.New("not found")
+	}
+	return m, nil
 }
 
 func GetUserByName(ctx context.Context, name string) (User, error) {

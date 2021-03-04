@@ -26,7 +26,8 @@ func getUser(ctx context.Context, id uint32, name string) (user data.User, err e
 	return
 }
 
-func (s *service) GetAccount(ctx context.Context, req *pb.GetAccountRequest) (*pb.GetAccountResponse, error) {
+func (s *service) GetAccount(ctx context.Context,
+	req *pb.GetAccountRequest) (*pb.GetAccountResponse, error) {
 	var resp pb.GetAccountResponse
 	if req == nil {
 		return &resp, errors.New("req is null")
@@ -39,7 +40,23 @@ func (s *service) GetAccount(ctx context.Context, req *pb.GetAccountRequest) (*p
 	return &resp, err
 }
 
-func (s *service) GetToken(ctx context.Context, req *pb.GetTokenRequest) (*pb.GetTokenResponse, error) {
+func (s *service) GetAccounts(ctx context.Context,
+	req *pb.GetAccountsRequest) (*pb.GetAccountsResponse, error) {
+	var resp pb.GetAccountsResponse
+	if req == nil {
+		return &resp, errors.New("req is null")
+	}
+
+	r, err := data.GetUsers(ctx, req.Ids)
+	if err != nil {
+		return &resp, err
+	}
+	resp.Names = r
+	return &resp, nil
+}
+
+func (s *service) GetToken(ctx context.Context,
+	req *pb.GetTokenRequest) (*pb.GetTokenResponse, error) {
 	var resp pb.GetTokenResponse
 	if req == nil {
 		return &resp, errors.New("req is null")
@@ -63,7 +80,8 @@ func (s *service) GetToken(ctx context.Context, req *pb.GetTokenRequest) (*pb.Ge
 	return &resp, err
 }
 
-func (s *service) ParseToken(ctx context.Context, req *pb.ParseTokenRequest) (*pb.ParseTokenResponse, error) {
+func (s *service) ParseToken(ctx context.Context,
+	req *pb.ParseTokenRequest) (*pb.ParseTokenResponse, error) {
 	var resp pb.ParseTokenResponse
 	if req == nil {
 		return &resp, errors.New("req is null")
@@ -81,11 +99,11 @@ func (s *service) ParseToken(ctx context.Context, req *pb.ParseTokenRequest) (*p
 	}
 
 	resp.Uid = claims.ID
-	// resp.Name = claims.Name
 	return &resp, nil
 }
 
-func (s *service) PostAccount(ctx context.Context, req *pb.PostAccountRequest) (*pb.PostAccountResponse, error) {
+func (s *service) PostAccount(ctx context.Context,
+	req *pb.PostAccountRequest) (*pb.PostAccountResponse, error) {
 	var resp pb.PostAccountResponse
 	if req == nil {
 		return &resp, errors.New("req is null")
