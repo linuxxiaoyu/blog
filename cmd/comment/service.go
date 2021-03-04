@@ -6,14 +6,43 @@ import (
 
 	pb "github.com/linuxxiaoyu/blog/api"
 	"github.com/linuxxiaoyu/blog/internal/data"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type service struct{}
 
-// TODO
-func (s *service) GetComment(ctx context.Context,
-	req *pb.GetCommentRequest) (*pb.GetCommentResponse, error) {
-	return nil, nil
+func (s *service) GetCommentsByAids(ctx context.Context,
+	req *pb.GetCommentsByAidsRequest) (*pb.GetCommentsByAidsResponse, error) {
+	var resp pb.GetCommentsByAidsResponse
+	if req == nil {
+		return &resp, errors.New("req is null")
+	}
+	comments, err := data.GetCommentsByAids(ctx, req.GetAids())
+	if err != nil {
+		return &resp, err
+	}
+
+	if resp.Comments == nil {
+		resp.Comments = make(map[uint32]*pb.CommentInfos)
+	}
+	for key, values := range comments {
+		var infos pb.CommentInfos
+		for _, v := range values {
+			info := pb.CommentInfo{
+				Id:      v.ID,
+				Uid:     v.UID,
+				Aid:     v.AID,
+				Content: v.Content,
+				Time:    timestamppb.New(v.Time),
+			}
+			if infos.Infos == nil {
+				infos.Infos = []*pb.CommentInfo{}
+			}
+			infos.Infos = append(infos.Infos, &info)
+		}
+		resp.Comments[key] = &infos
+	}
+	return &resp, nil
 }
 
 func (s *service) PostComment(ctx context.Context,

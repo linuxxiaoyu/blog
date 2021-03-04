@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 
 	"github.com/linuxxiaoyu/blog/internal/cache"
 	"github.com/linuxxiaoyu/blog/internal/setting"
@@ -20,6 +21,33 @@ type Comment struct {
 	AID     uint32 `gorm:"column:article_id"`
 	Content string
 	Time    time.Time
+}
+
+func GetCommentsByAids(ctx context.Context, aids []uint32) (map[uint32][]Comment, error) {
+	if aids == nil || len(aids) == 0 {
+		return nil, errors.New("aids can't empty")
+	}
+	tx := setting.DB().WithContext(ctx)
+	m := make(map[uint32][]Comment, len(aids))
+	comments := make([]Comment, 0, 100)
+	result := tx.Where("article_id IN ?", aids).FindInBatches(&comments, 100, func(tx *gorm.DB, batch int) error {
+		for _, comment := range comments {
+			if m[comment.AID] == nil {
+				m[comment.AID] = []Comment{}
+			}
+			m[comment.AID] = append(m[comment.AID], comment)
+		}
+		return nil
+	})
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected <= 0 {
+		return nil, errors.New("not found")
+	}
+
+	return m, nil
 }
 
 func CreateComment(ctx context.Context, comment *Comment) (uint32, error) {
