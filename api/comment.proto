@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package blog.api.v1;
+
+option go_package = ".;api";
+
+// The comment service definition.
+service Comment {
+    // Get comments by article ids.
+    rpc GetCommentsByAids(GetCommentsByAidsRequest) returns (GetCommentsByAidsResponse) {}
+    // Post a comment by aid and content.
+    rpc PostComment(PostCommentRequest) returns (PostCommentResponse) {}
+    // Update a comment by id and content.
+    rpc PutComment(PutCommentRequest) returns (PutCommentResponse) {}
+    // Delete a comment by id.
+    rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {}
+}
+
+// The request message containing article ids.
+message GetCommentsByAidsRequest {
+    repeated uint32 aids = 1;
+}
+
+message CommentInfo {
+    uint32 id = 1;
+    uint32 uid = 2;
+    uint32 aid = 3;
+    string content = 4;
+    google.protobuf.Timestamp time = 5;
+}
+
+message CommentInfos {
+    repeated CommentInfo infos = 1;
+}
+
+// The response message containing comments. aid -> comments
+message GetCommentsByAidsResponse {
+    map<uint32, CommentInfos> comments = 1;
+}
+
+// The request message containing article id and comment content.
+message PostCommentRequest {
+    uint32 aid = 1;
+    uint32 uid = 2;
+    string content = 3;
+    google.protobuf.Timestamp time = 4;
+}
+
+// The response message containing comment id.
+message PostCommentResponse {
+    uint32 id = 1;
+}
+
+// The request message containing comment id and content.
+message PutCommentRequest {
+    uint32 id = 1;
+    uint32 uid = 2;
+    string content = 3;
+}
+
+// The response message containing nothing.
+message PutCommentResponse {
+    google.protobuf.Empty e = 1;
+}
+
+// The request message containing comment id.
+message DeleteCommentRequest {
+    uint32 id = 1;
+    uint32 uid = 2;
+}
+
+// The response message containing nothing.
+message DeleteCommentResponse {
+    google.protobuf.Empty e = 1;
+}

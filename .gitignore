@@ -4,11 +4,10 @@
 *.dll
 *.so
 *.dylib
-blog
 files
 
 # Config for programs
-conf/server.ini
+server.ini
 
 # Test binary, built with `go test -c`
 *.test

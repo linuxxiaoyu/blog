@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package blog.api.v1;
+
+option go_package = ".;api";
+
+// The article service definition.
+service Article {
+    // Get article by id.
+    rpc GetArticle(GetArticleRequest) returns (GetArticleResponse) {}
+    // Get 10 articles order by id.
+    rpc GetArticles(GetArticlesRequest) returns (GetArticlesResponse) {}
+    // New a article by uid, title, content and time. 
+    rpc PostArticle(PostArticleRequest) returns (PostArticleResponse) {}
+    // Delete article by id and uid.
+    rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse) {}
+    // Update article by id, uid, title and content. 
+    rpc PutArticle(PutArticleRequest) returns (PutArticleResponse) {}
+}
+
+// The request message containing aid.
+message GetArticleRequest {
+    uint32 id = 1;
+}
+
+// The response message containing uid, article title, content and create time.
+message GetArticleResponse {
+    uint32 id = 1;
+    uint32 uid = 2;
+    string title = 3;
+    string content = 4;
+    google.protobuf.Timestamp time = 5;
+}
+
+// The request message containing nothing.
+message GetArticlesRequest {
+    google.protobuf.Empty e = 1;
+}
+
+// The response message containing []GetArticleResponse{}.
+message GetArticlesResponse {
+    repeated GetArticleResponse rs = 1;
+}
+
+// The request message containing uid, article title, content and create time.
+message PostArticleRequest {
+    uint32 uid = 1;
+    string title = 2;
+    string content = 3;
+    google.protobuf.Timestamp time = 4;
+}
+
+// The response message containing aid.
+message PostArticleResponse {
+    uint32 id = 1;
+}
+
+// The request message containing aid and uid.
+message DeleteArticleRequest {
+    uint32 id = 1;
+    uint32 uid = 2;
+}
+
+// The request message containg nothing.
+message DeleteArticleResponse {
+    google.protobuf.Empty e = 1;
+}
+
+// The request message containing aid, uid, article title and content.
+message PutArticleRequest {
+    uint32 id = 1;
+    uint32 uid = 2;
+    string title = 3;
+    string content = 4;
+}
+
+// The response message containing nothing.s
+message PutArticleResponse {
+    google.protobuf.Empty e = 1;
+}
